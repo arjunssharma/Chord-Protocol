@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -27,31 +28,42 @@ public class Chord {
 	private static Map<Integer, Node> map;
 	private static int number_of_nodes;
 	private static int finger_table_size;
+	private static BufferedReader br_normal;
 	
 	public static void main(String args[]) throws Exception {
-		if(args.length < 2) {
-			LOGGER.warning("SYNTAX ERROR: cmd expects " + 2 + " parameters not " + args.length);
+		if(args.length > 3) {
+			LOGGER.warning("SYNTAX ERROR: cmd expects 1 or 3 parameters not " + args.length);
 			System.exit(1);
 		}
 		
-		try {
-			br = new BufferedReader(new FileReader(args[0]));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			LOGGER.warning("ERROR: Invalid Input File Path, Try Again!");
-			System.exit(1);
+		if(args.length == 3 && args[0].equalsIgnoreCase("-i")) {
+			try {
+				br = new BufferedReader(new FileReader(args[1]));
+				finger_table_size = Integer.valueOf(args[2]);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				LOGGER.warning("ERROR: Invalid Input File Path, Try Again!");
+				System.exit(1);
+			}
+		}
+		else {
+			br_normal = new BufferedReader(new InputStreamReader(System.in));
+			finger_table_size = Integer.valueOf(args[0]);
 		}
 		
 		map = new HashMap<>();
-		finger_table_size = Integer.valueOf(args[1]);
 		number_of_nodes = (int)Math.pow(finger_table_size, 2);
 		
 		String line;
-		while((line = br.readLine()) != null) { //implement normal mode
-			if(line.trim().equals("end")) { //no output
+		while(br != null ? (line = br.readLine()) != null : (line = br_normal.readLine()) != null) {
+			if(line.trim().equals("end")) { //-------------------------END--------------------------
 				break;
 			}
-			else if(line.trim().startsWith("add")) {
+			else if(line.trim().startsWith("add")) { //----------------ADD--------------------------
+				if(line.trim().split("\\s").length != 2) {
+					LOGGER.warning("SYNTAX ERROR: cmd expects 2 parameters not " + args.length);
+					continue;
+				}
 				int node_id = Integer.valueOf(line.trim().split("\\s")[1]);
 				if(node_id < 0) {
 					LOGGER.warning("ERROR: invalid integer " + node_id);
@@ -76,7 +88,11 @@ public class Chord {
 					continue;
 				}
 			}
-			else if(line.trim().startsWith("drop")) {
+			else if(line.trim().startsWith("drop")) { //---------------DROP--------------------------
+				if(line.trim().split("\\s").length != 2) {
+					LOGGER.warning("SYNTAX ERROR: cmd expects 2 parameters not " + args.length);
+					continue;
+				}
 				int node_id = Integer.valueOf(line.trim().split("\\s")[1]);
 				if(!map.containsKey(node_id)) {
 					LOGGER.warning("ERROR: Node " + node_id + " does not exist");
@@ -86,7 +102,11 @@ public class Chord {
 					
 				}
 			}
-			else if(line.trim().startsWith("join")) { //no output
+			else if(line.trim().startsWith("join")) { //----------------JOIN--------------------------
+				if(line.trim().split("\\s").length != 3) {
+					LOGGER.warning("SYNTAX ERROR: cmd expects 3 parameters not " + args.length);
+					continue;
+				}
 				int from_node_id = Integer.valueOf(line.trim().split("\\s")[1]);
 				int to_node_id = Integer.valueOf(line.trim().split("\\s")[2]);
 				if(!map.containsKey(from_node_id) || !map.containsKey(to_node_id)) {
@@ -100,14 +120,27 @@ public class Chord {
 					//logic
 				}
 			}
-			else if(line.trim().startsWith("fix")) { //no output
+			else if(line.trim().startsWith("fix")) { //----------------FIX--------------------------
+				if(line.trim().split("\\s").length != 2) {
+					LOGGER.warning("SYNTAX ERROR: cmd expects 2 parameters not " + args.length);
+					continue;
+				}
 				
 			}
-			else if(line.trim().startsWith("stab")) { //no output
+			else if(line.trim().startsWith("stab")) { //---------------STAB--------------------------
+				if(line.trim().split("\\s").length != 2) {
+					LOGGER.warning("SYNTAX ERROR: cmd expects 2 parameters not " + args.length);
+					continue;
+				}
+				
 				
 			}
-			else if(line.trim().equals("list")) {
-				if(map.isEmpty()) {
+			else if(line.trim().equals("list")) { //-------------------LIST--------------------------
+				if(line.trim().split("\\s").length != 1) {
+					LOGGER.warning("SYNTAX ERROR: cmd expects 2 parameters not " + args.length);
+					continue;
+				}
+				else if(map.isEmpty()) {
 					LOGGER.warning("ERROR: No nodes exists");
 					continue;
 				}
@@ -120,7 +153,11 @@ public class Chord {
 					System.out.println(sb.toString());
 				}
 			}
-			else if(line.trim().startsWith("show")) {
+			else if(line.trim().startsWith("show")) { //----------------SHOW--------------------------
+				if(line.trim().split("\\s").length != 2) {
+					LOGGER.warning("SYNTAX ERROR: cmd expects 2 parameters not " + args.length);
+					continue;
+				}
 				int node_id = Integer.valueOf(line.trim().split("\\s")[1]);
 				if(!map.containsKey(node_id)) {
 					LOGGER.warning("ERROR: Node " + node_id + " does not exist");
@@ -148,6 +185,9 @@ public class Chord {
 			}
 		}
 		
-		br.close();
+		if(br != null)
+			br.close();
+		if(br_normal != null)
+			br_normal.close();
 	}
 }

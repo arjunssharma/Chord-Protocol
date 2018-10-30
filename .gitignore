@@ -1,1 +1,6 @@
+.classpath
+.project
+src/Node.class
+.settings
+src/Chord.class
 /build/
