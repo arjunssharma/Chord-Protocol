@@ -267,7 +267,5 @@ public class Chord {
 			br.close();
 		if(br_normal != null)
 			br_normal.close();
-	}
-	
-	
+	}	
 }
