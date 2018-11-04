@@ -65,13 +65,14 @@ class Node {
 	}
 	
 	public void stabilize(Map<Integer, Node> map) {
-		int x;
+		int x = this.node_id;
 		if(map.get(this.successor) != null)
 			x = map.get(this.successor).predecessor;
-		else
-			x = map.get(this.node_id).node_id;
+		else {
+			map.get(this.node_id).predecessor = -1;
+		}
 			
-		if(boundary_condition(this.node_id + 1, x, this.successor - 1))
+		if(boundary_condition(this.node_id + 1, x, this.successor - 1) || map.size() == 1)
 			this.successor = x;
 		if(map.get(this.successor) != null)
 			map.get(this.successor).notify(this.node_id, map);
