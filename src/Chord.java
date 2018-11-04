@@ -231,6 +231,10 @@ public class Chord {
 				}
 				
 				int node_id = Integer.valueOf(line.trim().split("\\s")[1]);
+				if(!map.containsKey(node_id)) {
+					System.out.println("ERROR: Node " + node_id + " does not exist");
+					continue;
+				}
 				Node node = map.get(node_id);
 				node.stabilize(map);
 			}
