@@ -95,7 +95,8 @@ public class Chord {
 	private static int finger_table_size;
 	private static BufferedReader br_normal;
 	
-	public static void main(String args[]) throws Exception {
+	public static void main(String str[]) throws Exception {
+		String args[] = str[0].split(" ");
 		if(args.length > 3) {
 			System.out.println("SYNTAX ERROR: cmd expects 1 or 3 parameters not " + args.length);
 			System.exit(1);
