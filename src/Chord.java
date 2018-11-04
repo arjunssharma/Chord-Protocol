@@ -65,10 +65,18 @@ class Node {
 	}
 	
 	public void stabilize(Map<Integer, Node> map) {
-		int x = map.get(this.successor).predecessor;
+		int x;
+		if(map.get(this.successor) != null)
+			x = map.get(this.successor).predecessor;
+		else
+			x = map.get(this.node_id).node_id;
+			
 		if(boundary_condition(this.node_id + 1, x, this.successor - 1))
 			this.successor = x;
-		map.get(this.successor).notify(this.node_id, map);
+		if(map.get(this.successor) != null)
+			map.get(this.successor).notify(this.node_id, map);
+		else
+			map.get(this.node_id).notify(this.node_id, map);
 	}
 	
 	public void notify(int n1, Map<Integer, Node> map) {
@@ -166,7 +174,13 @@ public class Chord {
 				}
 				else {
 					Node n = map.get(node_id);
-					
+					Node previous = map.get(n.predecessor);
+					Node successor = map.get(n.successor);
+					Node successor_predecessor = map.get(successor.predecessor);
+					Node previous_successor = map.get(previous.successor);
+					previous_successor = successor;
+					successor_predecessor = previous;
+					map.remove(node_id);
 				}
 			}
 			else if(line.trim().startsWith("join")) { //----------------JOIN--------------------------
