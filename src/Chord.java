@@ -80,6 +80,8 @@ class Node {
 		count = 0;
 		for(int i = 0; i < this.finger_table.length; i++) {
 			this.finger_table[i] = find_successor((this.node_id + (int)Math.pow(2, i)) % (int)Math.pow(2, this.finger_table.length), map);
+			if(count == (int)Math.pow(2, this.finger_table.length))
+				return;
 		}
 	}
 }
@@ -162,7 +164,8 @@ public class Chord {
 					continue;
 				}
 				else {
-					//remaining
+					Node n = map.get(node_id);
+					
 				}
 			}
 			else if(line.trim().startsWith("join")) { //----------------JOIN--------------------------
@@ -180,10 +183,14 @@ public class Chord {
 					continue;
 				}
 				else {
-					Node node = map.get(from_node_id);
-					Node node1 = map.get(to_node_id);
-					node.join(node1, map);
-					
+					try {
+						Node node = map.get(from_node_id);
+						Node node1 = map.get(to_node_id);
+						node.join(node1, map);
+					}
+					catch(Exception e) {
+						continue;
+					}
 				}
 			}
 			else if(line.trim().startsWith("fix")) { //----------------FIX--------------------------
