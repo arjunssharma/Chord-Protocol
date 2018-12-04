@@ -59,9 +59,9 @@ class Node {
 		count = 0;
 		this.predecessor = -1;
 		this.successor = node1.find_successor(this.node_id, map);
-		map.get(this.successor).notify(this.node_id, map);
-		this.stabilize(map);
-		node1.stabilize(map);
+		//map.get(this.successor).notify(this.node_id, map);
+		//this.stabilize(map);
+		//node1.stabilize(map);
 	}
 	
 	public void stabilize(Map<Integer, Node> map) {
@@ -92,6 +92,12 @@ class Node {
 			if(count == (int)Math.pow(2, this.finger_table.length))
 				return;
 		}
+	}
+	public void setSuccessor(int successor) {
+		this.successor = successor;
+	}
+	public void setPredecessor(int predecessor) {
+		this.predecessor = predecessor;
 	}
 }
 
@@ -127,7 +133,7 @@ public class Chord {
 		}
 		
 		map = new TreeMap<>();
-		number_of_nodes = (int)Math.pow(finger_table_size, 2);
+		number_of_nodes = (int)Math.pow(2, finger_table_size);
 		
 		String line;
 		while(br != null ? (line = br.readLine()) != null : (line = br_normal.readLine()) != null) {
@@ -177,10 +183,12 @@ public class Chord {
 					Node n = map.get(node_id);
 					Node previous = map.get(n.predecessor);
 					Node successor = map.get(n.successor);
-					Node successor_predecessor = map.get(successor.predecessor);
-					Node previous_successor = map.get(previous.successor);
-					previous_successor = successor;
-					successor_predecessor = previous;
+//					Node successor_predecessor = map.get(successor.predecessor);
+//					Node previous_successor = map.get(previous.successor);
+					previous.setSuccessor(successor.node_id);
+					successor.setPredecessor(previous.node_id);
+					//previous_successor = successor;
+					//successor_predecessor = previous;
 					map.remove(node_id);
 				}
 			}
